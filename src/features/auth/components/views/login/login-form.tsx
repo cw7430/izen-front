@@ -16,7 +16,6 @@ import {
 import { loginAction } from '@/features/auth/server/actions';
 import { PasswordInput } from '@/common/components/ui/input';
 import { AUTH_KEYS } from '@/features/auth/constants';
-import { ApiError } from '@/common/api/shared/error';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -61,12 +60,8 @@ export default function LoginForm() {
     mutationKey: AUTH_KEYS.login,
     mutationFn: loginAction,
     onSuccess: (res) => {
-      login(res);
-      router.replace(redirectTo);
-    },
-    onError: (e) => {
-      if (e instanceof ApiError) {
-        switch (e.code) {
+      if (!res.success) {
+        switch (res.error.code) {
           case 'LGE':
           case 'VE':
             setError('root', {
@@ -82,6 +77,10 @@ export default function LoginForm() {
         return;
       }
 
+      login(res.data);
+      router.replace(redirectTo);
+    },
+    onError: () => {
       setError('root', {
         message: '서버에서 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',
       });

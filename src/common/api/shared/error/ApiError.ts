@@ -1,5 +1,5 @@
 import type { ResponseCodeType } from '@/common/api/shared/constants';
-import { ValidationFields } from '@/common/api/shared/schemas/api';
+import type { ValidationFields } from '@/common/api/shared/schemas/api';
 
 export class ApiError extends Error {
   public readonly code: ResponseCodeType;
