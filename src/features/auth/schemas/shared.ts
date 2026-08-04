@@ -49,9 +49,7 @@ export type AuthState = AuthStateData & {
 
   setHasHydrated: (v: boolean) => void;
 
-  signIn: (data: LoginAndRefreshResponseDtoForClient) => void;
+  login: (data: LoginAndRefreshResponseDtoForClient) => void;
 
-  checkAuth: () => boolean;
-
-  signOut: () => void;
+  logout: () => void;
 };

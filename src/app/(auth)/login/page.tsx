@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import styles from './page.module.css';
+import { LoginForm } from '@/features/auth/components/views/login';
 
 export default function Login() {
   return (
@@ -20,7 +21,9 @@ export default function Login() {
           <div className="card-title h5">로그인</div>
           <div className="card-subtitle h6 text-muted">Izen</div>
         </div>
-        <div className="text-start pb-2 card-body">{/* TODO: 폼 넣기 */}</div>
+        <div className="text-start pb-2 card-body">
+          <LoginForm />
+        </div>
       </div>
     </main>
   );
