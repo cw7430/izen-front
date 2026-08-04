@@ -1,25 +1,39 @@
 'use client';
 
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useShallow } from 'zustand/shallow';
 import { Button, Form, Spinner } from 'react-bootstrap';
 
 import { useAppConfigStore } from '@/common/stores';
-
+import { useAuthStore } from '@/features/auth/stores/auth';
 import {
   loginRequestSchema,
   type LoginRequestDto,
 } from '@/features/auth/schemas';
+import { loginAction } from '@/features/auth/server/actions';
 import { PasswordInput } from '@/common/components/ui/input';
+import { AUTH_KEYS } from '@/features/auth/constants';
+import { ApiError } from '@/common/api/shared/error';
 
 export default function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const { isAutoLogin, setAutoLogin } = useAppConfigStore(
     useShallow((s) => ({
       isAutoLogin: s.isAutoLogin,
       setAutoLogin: s.setAutoLogin,
     })),
   );
+
+  const login = useAuthStore((s) => s.login);
+
+  const redirect = searchParams.get('redirect');
+
+  const redirectTo = redirect && redirect.startsWith('/') ? redirect : '/';
 
   const loginForm = useForm<LoginRequestDto>({
     mode: 'onChange',
@@ -43,8 +57,39 @@ export default function LoginForm() {
     }
   };
 
+  const mutation = useMutation({
+    mutationKey: AUTH_KEYS.login,
+    mutationFn: loginAction,
+    onSuccess: (res) => {
+      login(res);
+      router.replace(redirectTo);
+    },
+    onError: (e) => {
+      if (e instanceof ApiError) {
+        switch (e.code) {
+          case 'LGE':
+          case 'VE':
+            setError('root', {
+              message: '아이디 또는 비밀번호가 올바르지 않습니다.',
+            });
+            break;
+          default:
+            setError('root', {
+              message:
+                '서버에서 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',
+            });
+        }
+        return;
+      }
+
+      setError('root', {
+        message: '서버에서 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',
+      });
+    },
+  });
+
   const onSubmit: SubmitHandler<LoginRequestDto> = (req) => {
-    alert(JSON.stringify(req, null, 2));
+    mutation.mutate(req);
   };
 
   return (
@@ -64,6 +109,7 @@ export default function LoginForm() {
               placeholder="아이디를 입력해주세요"
               {...field}
               isInvalid={!!errors.userName}
+              disabled={mutation.isPending}
             />
           )}
         />
@@ -82,6 +128,7 @@ export default function LoginForm() {
               {...field}
               isInvalid={!!errors.password}
               errorMessage={errors.password?.message}
+              disabled={mutation.isPending}
             />
           )}
         />
@@ -96,6 +143,7 @@ export default function LoginForm() {
             id="login.is-auto"
             className="mb-3"
             checked={field.value}
+            disabled={mutation.isPending}
             onChange={(e) => {
               field.onChange(e.currentTarget.checked);
               setAutoLogin(e.currentTarget.checked);
@@ -109,7 +157,13 @@ export default function LoginForm() {
           {errors.root.message}
         </div>
       )}
-      <Button type="submit" variant="primary" className="w-100 mt-2 mb-3">
+      <Button
+        type="submit"
+        variant="primary"
+        className="w-100 mt-2 mb-3"
+        disabled={mutation.isPending}
+      >
+        {mutation.isPending && <Spinner size="sm" />}
         로그인
       </Button>
     </Form>
