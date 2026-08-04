@@ -6,3 +6,4 @@ export {
   type ContentType,
   type QueryValue,
 } from './fetch';
+export { clientResponseSingle, clientResponseWithResult } from './action';
