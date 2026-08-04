@@ -103,6 +103,15 @@ export default function LoginForm() {
           />
         )}
       />
+
+      {errors.root && (
+        <div className="d-block invalid-feedback mb-2">
+          {errors.root.message}
+        </div>
+      )}
+      <Button type="submit" variant="primary" className="w-100 mt-2 mb-3">
+        로그인
+      </Button>
     </Form>
   );
 }
