@@ -6,5 +6,7 @@ export {
   type AuthState,
   type AuthStateData,
   type LoginAndRefreshResponseDtoForClient,
-  type LoginAndRefreshResponseDtoForServer
+  type LoginAndRefreshResponseDtoForServer,
 } from './shared';
+export { refreshRequestSchema, type RefreshRequestDto } from './refresh';
+export { logoutRequestSchema, type LogoutRequestDto } from './logout';
