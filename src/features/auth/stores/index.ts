@@ -1,0 +1,1 @@
+export { validateAuthIntegrity } from './auth';
