@@ -8,7 +8,7 @@ import { useShallow } from 'zustand/shallow';
 import { Button, Form, Spinner } from 'react-bootstrap';
 
 import { useAppConfigStore } from '@/common/stores';
-import { useAuthStore } from '@/features/auth/stores/auth';
+import { useAuthStore } from '@/features/auth/stores';
 import {
   loginRequestSchema,
   type LoginRequestDto,

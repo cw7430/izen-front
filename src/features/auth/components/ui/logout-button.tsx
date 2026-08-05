@@ -4,7 +4,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from 'react-bootstrap';
 
-import { useAuthStore } from '@/features/auth/stores/auth';
+import { useAuthStore } from '@/features/auth/stores';
 import { AUTH_KEYS } from '@/features/auth/constants';
 import { logoutAction } from '@/features/auth/server/actions';
 

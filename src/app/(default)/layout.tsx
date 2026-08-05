@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 
 import { DefaultFooter } from '@/common/components/layout/footer';
 import { DefaultHeader } from '@/common/components/layout/header';
+import { AuthInitalizer } from '@/features/auth/components/layouts';
 
 export default async function DefaultLayout({
   children,
@@ -20,6 +21,7 @@ export default async function DefaultLayout({
 
   return (
     <>
+      <AuthInitalizer hasAccessToken={hasAccessToken} />
       <div className="bg-light text-dark">
         <DefaultHeader />
         {children}
