@@ -11,12 +11,7 @@ import {
   type ResponseCodeType,
 } from '@/common/api/shared/constants';
 
-const successSingle = (): SuccessAction<void> => ({
-  success: true,
-  data: undefined,
-});
-
-const successWithResult = <T>(data: T): SuccessAction<T> => ({
+const success = <T>(data: T): SuccessAction<T> => ({
   success: true,
   data,
 });
@@ -34,31 +29,13 @@ const error = (
   },
 });
 
-export const clientResponseSingle = async (
-  fn: () => Promise<void>,
-): Promise<SuccessAction<void> | ErrorAction> =>
-  (async () => {
-    try {
-      await fn();
-      return successSingle();
-    } catch (e) {
-      if (e instanceof ApiError) {
-        return error(e.code, e.message, e.errors);
-      }
-      return error(
-        ResponseCode.INTERNAL_SERVER_ERROR.code,
-        ResponseCode.INTERNAL_SERVER_ERROR.message,
-      );
-    }
-  })();
-
-export const clientResponseWithResult = async <T>(
+export const clientResponse = async <T>(
   fn: () => Promise<T>,
 ): Promise<SuccessAction<T> | ErrorAction> =>
   (async () => {
     try {
       const data = await fn();
-      return successWithResult(data);
+      return success(data);
     } catch (e) {
       if (e instanceof ApiError) {
         return error(e.code, e.message, e.errors);
