@@ -10,8 +10,11 @@ export default async function DefaultLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const refreshToken = cookieStore.get('refreshToken')?.value;
-  if (!refreshToken) {
+
+  const hasRefreshToken = !!cookieStore.get('refreshToken')?.value;
+  const hasAccessToken = !!cookieStore.get('accessToken')?.value;
+
+  if (!hasRefreshToken) {
     redirect('/login', 'replace');
   }
 
