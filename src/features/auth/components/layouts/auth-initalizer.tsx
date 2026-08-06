@@ -46,7 +46,7 @@ export default function AuthInitalizer({ hasAccessToken }: Props) {
       title: '세션만료',
       text: '세션이 만료되었습니다. 로그아웃합니다.',
       handleAfterClose: () => {
-        router.replace(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
+        router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
       },
     });
   }, [logout, clearRefreshTimer, showModal, router, pathname]);

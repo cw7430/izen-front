@@ -13,7 +13,7 @@ export const profileListRequestSchema = pageRequestSchema([
   'DEPARTMENT',
 ] as const);
 
-const baseProfileSchema = z.object({
+const profileResponseSchema = z.object({
   employeeId: z.string().transform((val) => BigInt(val)),
   employeeCode: z.string(),
   employeeRole: z.enum(['DEPARTMENT_CHIEF', 'TEAM_CHIEF', 'EMPLOYEE', 'LEFT']),
@@ -35,16 +35,20 @@ const baseProfileSchema = z.object({
   deletedAt: z.coerce.date().nullable(),
 });
 
-export const profileResponseSchema = baseProfileSchema.extend({
+export const profileDetailResponseSchema = profileResponseSchema.extend({
   departments: departmentListResponseSchema,
   positions: positionListResponseSchema,
 });
 
-export const profileListResponseSchema = pageResponseSchema(baseProfileSchema).extend({
+export const profileListResponseSchema = z.object({
+  employeeProfiles: pageResponseSchema(profileResponseSchema),
   departments: departmentListResponseSchema,
   positions: positionListResponseSchema,
 });
 
 export type ProfileListRequestDto = z.infer<typeof profileListRequestSchema>;
 export type ProfileResponseDto = z.infer<typeof profileResponseSchema>;
+export type ProfileDetailResponseDto = z.infer<
+  typeof profileDetailResponseSchema
+>;
 export type ProfileListResponseDto = z.infer<typeof profileListResponseSchema>;

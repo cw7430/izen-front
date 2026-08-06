@@ -4,10 +4,10 @@ import { ServerRequest } from '@/common/api/server';
 import { ApiError } from '@/common/api/shared/error';
 import { ResponseCode } from '@/common/api/shared/constants';
 import {
-  profileResponseSchema,
+  profileDetailResponseSchema,
   profileListResponseSchema,
   type ProfileListRequestDto,
-  type ProfileResponseDto,
+  type ProfileDetailResponseDto,
   type ProfileListResponseDto,
 } from '@/features/hr/schemas';
 
@@ -24,6 +24,7 @@ export const getProfileList = async (param: ProfileListRequestDto) => {
 
   if (!validation.success) {
     console.error('Parse Error: ', validation.error.message);
+    console.error('Parse Data: ', JSON.stringify(res, null, 2));
     throw new ApiError(
       ResponseCode.INTERNAL_SERVER_ERROR.code,
       ResponseCode.INTERNAL_SERVER_ERROR.message,
@@ -34,11 +35,11 @@ export const getProfileList = async (param: ProfileListRequestDto) => {
 };
 
 export const getProfile = async (id: bigint) => {
-  const res = await apiGet<ProfileResponseDto>(`/hr/profiles/${String(id)}`, {
+  const res = await apiGet<ProfileDetailResponseDto>(`/hr/profiles/${String(id)}`, {
     authType: 'access',
   });
 
-  const validation = profileResponseSchema.safeParse(res);
+  const validation = profileDetailResponseSchema.safeParse(res);
 
   if (!validation.success) {
     console.error('Parse Error: ', validation.error.message);
