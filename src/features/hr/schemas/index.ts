@@ -1,16 +1,11 @@
-export {
-  departmentListResponseSchema,
-  type DepartmentListResponseDto,
-} from './department';
-export {
-  positionListResponseSchema,
-  type PositionListResponseDto,
-} from './position';
+export { type DepartmentListResponseDto } from './department';
+export { type PositionListResponseDto } from './position';
 export {
   profileListRequestSchema,
-  profileResponseSchema,
+  profileDetailResponseSchema,
   profileListResponseSchema,
-  type ProfileListRequestDto,
   type ProfileResponseDto,
+  type ProfileListRequestDto,
+  type ProfileDetailResponseDto,
   type ProfileListResponseDto,
 } from './profile';
