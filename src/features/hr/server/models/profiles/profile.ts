@@ -34,8 +34,8 @@ export const getProfileList = async (param: ProfileListRequestDto) => {
   return validation.data;
 };
 
-export const getProfile = async (id: bigint) => {
-  const res = await apiGet<ProfileDetailResponseDto>(`/hr/profiles/${String(id)}`, {
+export const getProfile = async (id: string) => {
+  const res = await apiGet<ProfileDetailResponseDto>(`/hr/profiles/${id}`, {
     authType: 'access',
   });
 

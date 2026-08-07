@@ -13,6 +13,8 @@ export const profileListRequestSchema = pageRequestSchema([
   'DEPARTMENT',
 ] as const);
 
+const allowedProfileTeamsSchema = z.array(z.string());
+
 const profileResponseSchema = z.object({
   employeeId: z.string().transform((val) => BigInt(val)),
   employeeCode: z.string(),
@@ -38,12 +40,14 @@ const profileResponseSchema = z.object({
 export const profileDetailResponseSchema = profileResponseSchema.extend({
   departments: departmentListResponseSchema,
   positions: positionListResponseSchema,
+  allowedProfileTeamsSchema,
 });
 
 export const profileListResponseSchema = z.object({
   employeeProfiles: pageResponseSchema(profileResponseSchema),
   departments: departmentListResponseSchema,
   positions: positionListResponseSchema,
+  allowedProfileTeamsSchema,
 });
 
 export type ProfileListRequestDto = z.infer<typeof profileListRequestSchema>;
