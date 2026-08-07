@@ -96,7 +96,7 @@ export default function AuthInitalizer({ hasAccessToken }: Props) {
   );
 
   useEffect(() => {
-    if (!hasHydrated) return;
+    if (!hasHydrated || !isLoggedIn) return;
 
     const req = { isAuto: isAutoLogin };
     recoverAuth(req);
