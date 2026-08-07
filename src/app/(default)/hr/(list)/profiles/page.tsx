@@ -8,7 +8,7 @@ interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function EmployeeProfiles({ searchParams }: Props) {
+export default async function EmployeeProfileList({ searchParams }: Props) {
   const {
     page = '1',
     sortPath = 'EMPLOYEE',
