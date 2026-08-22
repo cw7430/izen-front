@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { useShallow } from 'zustand/shallow';
 
@@ -18,6 +18,9 @@ interface Props {
 export default function AuthInitalizer({ hasAccessToken }: Props) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
+
   const isAutoLogin = useAppConfigStore((s) => s.isAutoLogin);
   const showModal = useDialogModalState((s) => s.showModal);
   const { isLoggedIn, logout, login, hasHydrated } = useAuthStore(
@@ -46,7 +49,9 @@ export default function AuthInitalizer({ hasAccessToken }: Props) {
       title: '세션만료',
       text: '세션이 만료되었습니다. 로그아웃합니다.',
       handleAfterClose: () => {
-        router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+        router.replace(
+          `/login?redirect=${encodeURIComponent(`${pathname}?${params}`)}`,
+        );
       },
     });
   }, [logout, clearRefreshTimer, showModal, router, pathname]);

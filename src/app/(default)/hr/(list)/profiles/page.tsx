@@ -1,8 +1,15 @@
-import { redirect } from 'next/navigation';
-
 import { getProfileList } from '@/features/hr/server/models/profiles';
-import { ProfilesTeb } from '@/features/hr/components/views/profiles/list';
-import { ProfilesTable } from '@/features/hr/components/views/profiles/list/table';
+import {
+  ProfilesTeb,
+  ProfilesTable,
+} from '@/features/hr/components/views/profiles/list';
+import { ApiError } from '@/common/api/shared/error';
+import { ResponseCode } from '@/common/api/shared/constants';
+import {
+  InternalServerError,
+  KeyError,
+  Unauthorized,
+} from '@/common/components/layout/errors';
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -34,7 +41,23 @@ export default async function EmployeeProfileList({ searchParams }: Props) {
         <ProfilesTable data={profiles} params={params} />
       </>
     );
-  } catch {
-    redirect('/');
+  } catch (e) {
+    if (e instanceof ApiError) {
+      if (
+        e.code === ResponseCode.UNAUTHORIZED.code ||
+        e.code === ResponseCode.EXPIRED_TOKEN.code ||
+        e.code === ResponseCode.INVALID_TOKEN.code
+      ) {
+        return <Unauthorized />;
+      }
+      if (e.code === ResponseCode.KEY_ERROR.code) {
+        return <KeyError />;
+      }
+      if (e.code === ResponseCode.RESOURCE_NOT_FOUND.code) {
+        return <InternalServerError />;
+      }
+      return <InternalServerError />;
+    }
+    return <InternalServerError />;
   }
 }
