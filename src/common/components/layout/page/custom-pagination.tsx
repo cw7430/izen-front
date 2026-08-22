@@ -24,36 +24,40 @@ export default function CustomPagination<T>({ data }: Props<T>) {
   };
 
   return (
-    <Pagination>
-      {currentPage > 1 && (
-        <Pagination.First as={Link} href={createPageUrl(1)} />
-      )}
+    <>
+      {totalPages > 1 && (
+        <Pagination>
+          {currentPage > 1 && (
+            <Pagination.First as={Link} href={createPageUrl(1)} />
+          )}
 
-      {hasPrevious && (
-        <Pagination.Prev as={Link} href={createPageUrl(startPage - 1)} />
-      )}
+          {hasPrevious && (
+            <Pagination.Prev as={Link} href={createPageUrl(startPage - 1)} />
+          )}
 
-      {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
-        const page = startPage + i;
-        return (
-          <Pagination.Item
-            key={page}
-            active={currentPage === page}
-            as={Link}
-            href={createPageUrl(page)}
-          >
-            {page}
-          </Pagination.Item>
-        );
-      })}
+          {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+            const page = startPage + i;
+            return (
+              <Pagination.Item
+                key={page}
+                active={currentPage === page}
+                as={Link}
+                href={createPageUrl(page)}
+              >
+                {page}
+              </Pagination.Item>
+            );
+          })}
 
-      {hasNext && (
-        <Pagination.Next as={Link} href={createPageUrl(endPage + 1)} />
-      )}
+          {hasNext && (
+            <Pagination.Next as={Link} href={createPageUrl(endPage + 1)} />
+          )}
 
-      {currentPage < totalPages && (
-        <Pagination.Last as={Link} href={createPageUrl(totalPages)} />
+          {currentPage < totalPages && (
+            <Pagination.Last as={Link} href={createPageUrl(totalPages)} />
+          )}
+        </Pagination>
       )}
-    </Pagination>
+    </>
   );
 }
