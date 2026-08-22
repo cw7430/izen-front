@@ -71,7 +71,7 @@ const profileResponseSchema = z.object({
 export const profileDetailResponseSchema = profileResponseSchema.extend({
   departments: departmentListResponseSchema,
   positions: positionListResponseSchema,
-  allowedProfileTeamsSchema,
+  allowedProfileTeams: allowedProfileTeamsSchema,
 });
 
 export const employeeCodeResponseSchema = z.object({
@@ -82,7 +82,7 @@ export const profileListResponseSchema = z.object({
   employeeProfiles: pageResponseSchema(profileResponseSchema),
   departments: departmentListResponseSchema,
   positions: positionListResponseSchema,
-  allowedProfileTeamsSchema,
+  allowedProfileTeams: allowedProfileTeamsSchema,
 });
 
 export type ProfileListRequestDto = z.infer<typeof profileListRequestSchema>;
