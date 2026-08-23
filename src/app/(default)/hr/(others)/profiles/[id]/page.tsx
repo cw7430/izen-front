@@ -1,7 +1,14 @@
-import { redirect } from 'next/navigation';
 import { Container, Row, Col } from 'react-bootstrap';
 
 import { getProfile } from '@/features/hr/server/models/profiles';
+import { ApiError } from '@/common/api/shared/error';
+import {
+  InternalServerError,
+  KeyError,
+  Unauthorized,
+  ValidationError,
+} from '@/common/components/layout/errors';
+import { ResponseCode } from '@/common/api/shared/constants';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -9,6 +16,8 @@ interface Props {
 
 export default async function EmployeeProfileDetail({ params }: Props) {
   const { id } = await params;
+
+  const REDIECT_TO = `/hr/profiles`;
 
   try {
     const profile = await getProfile(id);
@@ -65,7 +74,24 @@ export default async function EmployeeProfileDetail({ params }: Props) {
         </div>
       </>
     );
-  } catch {
-    redirect('/');
+  } catch (e) {
+    if (e instanceof ApiError) {
+      if (
+        e.code === ResponseCode.UNAUTHORIZED.code ||
+        e.code === ResponseCode.EXPIRED_TOKEN.code ||
+        e.code === ResponseCode.INVALID_TOKEN.code
+      ) {
+        return <Unauthorized />;
+      }
+
+      if (e.code === ResponseCode.KEY_ERROR.code) {
+        return <KeyError />;
+      }
+
+      if (e.code === ResponseCode.RESOURCE_NOT_FOUND.code) {
+        return <ValidationError redirectTo={REDIECT_TO} />;
+      }
+    }
+    return <InternalServerError />;
   }
 }

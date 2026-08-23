@@ -9,6 +9,7 @@ import {
   InternalServerError,
   KeyError,
   Unauthorized,
+  ValidationError,
 } from '@/common/components/layout/errors';
 
 interface Props {
@@ -32,6 +33,8 @@ export default async function EmployeeProfileList({ searchParams }: Props) {
     blockSize: 5,
   };
 
+  const REDIECT_TO = `/hr/profiles`;
+
   try {
     const profiles = await getProfileList(params);
 
@@ -53,10 +56,12 @@ export default async function EmployeeProfileList({ searchParams }: Props) {
       if (e.code === ResponseCode.KEY_ERROR.code) {
         return <KeyError />;
       }
-      if (e.code === ResponseCode.RESOURCE_NOT_FOUND.code) {
-        return <InternalServerError />;
+      if (
+        e.code === ResponseCode.VALIDATION_ERROR.code ||
+        e.code === ResponseCode.RESOURCE_NOT_FOUND.code
+      ) {
+        return <ValidationError redirectTo={REDIECT_TO} />;
       }
-      return <InternalServerError />;
     }
     return <InternalServerError />;
   }
