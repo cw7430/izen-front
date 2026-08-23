@@ -9,6 +9,9 @@ import {
   ValidationError,
 } from '@/common/components/layout/errors';
 import { ResponseCode } from '@/common/api/shared/constants';
+import { NavProfileListButton } from '@/features/hr/components/views/profiles/detail';
+import { ShowModalButton } from '@/common/components/ui/button';
+import { UpdateProfileModal } from '@/features/hr/components/ui/modal';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -18,18 +21,10 @@ export default async function EmployeeProfileDetail({ params }: Props) {
   const { id } = await params;
 
   const REDIECT_TO = `/hr/profiles`;
+  const MODAL_KEY = 'UpdateProfile';
 
   try {
     const profile = await getProfile(id);
-
-    const {
-      employeeCode,
-      employeeName,
-      positionName,
-      departmentName,
-      teamName,
-      phone,
-    } = profile;
 
     return (
       <>
@@ -45,33 +40,45 @@ export default async function EmployeeProfileDetail({ params }: Props) {
                 <div className="border p-3 rounded">
                   <p>
                     <strong>{'사번: '}</strong>
-                    {employeeCode}
+                    {profile.employeeCode}
                   </p>
                   <p>
                     <strong>{'이름: '}</strong>
-                    {employeeName}
+                    {profile.employeeName}
                   </p>
                   <p>
                     <strong>{'직급: '}</strong>
-                    {positionName}
+                    {profile.positionName}
                   </p>
                   <p>
                     <strong>{'부서: '}</strong>
-                    {departmentName}
+                    {profile.departmentName}
                   </p>
                   <p>
                     <strong>{'팀: '}</strong>
-                    {teamName}
+                    {profile.teamName}
                   </p>
                   <p>
                     <strong>{'전화번호: '}</strong>
-                    {phone}
+                    {profile.phone}
                   </p>
                 </div>
               </Col>
             </Row>
+            <Row className="justify-content-center">
+              <Col xs="auto">
+                <ShowModalButton
+                  allowedProfileTeams={profile.allowedProfileTeams}
+                  modalKey={MODAL_KEY}
+                  name="사원 정보 수정"
+                  className="me-2"
+                />
+                <NavProfileListButton defaultRedirectTo={REDIECT_TO} />
+              </Col>
+            </Row>
           </Container>
         </div>
+        <UpdateProfileModal modalKey={MODAL_KEY} profile={profile} />
       </>
     );
   } catch (e) {

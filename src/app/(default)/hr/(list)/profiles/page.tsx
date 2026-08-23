@@ -11,6 +11,7 @@ import {
   Unauthorized,
   ValidationError,
 } from '@/common/components/layout/errors';
+import { CreateProfileModal } from '@/features/hr/components/ui/modal';
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -34,14 +35,24 @@ export default async function EmployeeProfileList({ searchParams }: Props) {
   };
 
   const REDIECT_TO = `/hr/profiles`;
+  const MODAL_KEY = 'CreateProfile';
 
   try {
     const profiles = await getProfileList(params);
 
     return (
       <>
-        <ProfilesTeb />
+        <ProfilesTeb
+          modalKey={MODAL_KEY}
+          allowedProfileTeams={profiles.allowedProfileTeams}
+        />
         <ProfilesTable data={profiles} params={params} />
+        <CreateProfileModal
+          modalKey={MODAL_KEY}
+          allowedProfileTeams={profiles.allowedProfileTeams}
+          departments={profiles.departments}
+          positions={profiles.positions}
+        />
       </>
     );
   } catch (e) {
