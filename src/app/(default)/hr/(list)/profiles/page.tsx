@@ -9,7 +9,9 @@ import {
   InternalServerError,
   KeyError,
   Unauthorized,
+  ValidationError,
 } from '@/common/components/layout/errors';
+import { CreateProfileModal } from '@/features/hr/components/ui/modal';
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -32,13 +34,25 @@ export default async function EmployeeProfileList({ searchParams }: Props) {
     blockSize: 5,
   };
 
+  const REDIECT_TO = `/hr/profiles`;
+  const MODAL_KEY = 'CreateProfile';
+
   try {
     const profiles = await getProfileList(params);
 
     return (
       <>
-        <ProfilesTeb />
+        <ProfilesTeb
+          modalKey={MODAL_KEY}
+          allowedProfileTeams={profiles.allowedProfileTeams}
+        />
         <ProfilesTable data={profiles} params={params} />
+        <CreateProfileModal
+          modalKey={MODAL_KEY}
+          allowedProfileTeams={profiles.allowedProfileTeams}
+          departments={profiles.departments}
+          positions={profiles.positions}
+        />
       </>
     );
   } catch (e) {
@@ -53,10 +67,12 @@ export default async function EmployeeProfileList({ searchParams }: Props) {
       if (e.code === ResponseCode.KEY_ERROR.code) {
         return <KeyError />;
       }
-      if (e.code === ResponseCode.RESOURCE_NOT_FOUND.code) {
-        return <InternalServerError />;
+      if (
+        e.code === ResponseCode.VALIDATION_ERROR.code ||
+        e.code === ResponseCode.RESOURCE_NOT_FOUND.code
+      ) {
+        return <ValidationError redirectTo={REDIECT_TO} />;
       }
-      return <InternalServerError />;
     }
     return <InternalServerError />;
   }
