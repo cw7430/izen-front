@@ -6,14 +6,24 @@ import { Modal } from 'react-bootstrap';
 
 import { useModalState, useDialogModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
-import { type ProfileDetailResponseDto } from '@/features/hr/schemas';
+import {
+  type DepartmentListResponseDto,
+  type PositionListResponseDto,
+} from '@/features/hr/profiles/schemas';
 
 interface Props {
   modalKey: string;
-  profile: ProfileDetailResponseDto;
+  allowedProfileTeams: string[];
+  departments: DepartmentListResponseDto;
+  positions: PositionListResponseDto;
 }
 
-export default function UpdateProfileModal({ modalKey, profile }: Props) {
+export default function CreateProfileModal({
+  modalKey,
+  allowedProfileTeams,
+  departments,
+  positions,
+}: Props) {
   const { modals, closeModal } = useModalState(
     useShallow((s) => ({ modals: s.modals, closeModal: s.closeModal })),
   );
@@ -21,7 +31,7 @@ export default function UpdateProfileModal({ modalKey, profile }: Props) {
   const team = useAuthStore((s) => s.team);
 
   const isOpen = modals.includes(modalKey);
-  const isPermitted = team ? profile.allowedProfileTeams.includes(team) : false;
+  const isPermitted = team ? allowedProfileTeams.includes(team) : false;
 
   useEffect(() => {
     if (isOpen) {
@@ -44,7 +54,7 @@ export default function UpdateProfileModal({ modalKey, profile }: Props) {
       show={!!isOpen}
       onHide={() => closeModal(modalKey)}
     >
-      <Modal.Header closeButton>사원 수정</Modal.Header>
+      <Modal.Header closeButton>사원 등록</Modal.Header>
     </Modal>
   );
 }

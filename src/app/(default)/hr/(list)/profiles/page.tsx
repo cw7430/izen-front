@@ -1,8 +1,8 @@
-import { getProfileList } from '@/features/hr/server/models/profiles';
+import { getProfileList } from '@/features/hr/profiles/server/models';
 import {
   ProfilesTeb,
   ProfilesTable,
-} from '@/features/hr/components/views/profiles/list';
+} from '@/features/hr/profiles/components/views/list';
 import { ApiError } from '@/common/api/shared/error';
 import { ResponseCode } from '@/common/api/shared/constants';
 import {
@@ -11,7 +11,7 @@ import {
   Unauthorized,
   ValidationError,
 } from '@/common/components/layout/errors';
-import { CreateProfileModal } from '@/features/hr/components/ui/modal';
+import { CreateProfileModal } from '@/features/hr/profiles/components/ui/modal';
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
