@@ -56,6 +56,36 @@ export default function AuthInitalizer({ hasAccessToken }: Props) {
     });
   }, [logout, clearRefreshTimer, showModal, router, pathname]);
 
+  const handleServerError = useCallback(() => {
+    logout();
+    clearRefreshTimer();
+    showModal({
+      modal: 'alert',
+      title: '서버에러',
+      text: '서버 문제가 발생하였습니다.',
+      handleAfterClose: () => {
+        router.replace(
+          `/login?redirect=${encodeURIComponent(`${pathname}?${params}`)}`,
+        );
+      },
+    });
+  }, [logout, clearRefreshTimer, showModal, router, pathname]);
+
+  const handleKeyError = useCallback(() => {
+    logout();
+    clearRefreshTimer();
+    showModal({
+      modal: 'alert',
+      title: 'API KEY 에러',
+      text: 'API KEY가 잘못되었습니다. 관리자에게 문의하세요.',
+      handleAfterClose: () => {
+        router.replace(
+          `/login?redirect=${encodeURIComponent(`${pathname}?${params}`)}`,
+        );
+      },
+    });
+  }, [logout, clearRefreshTimer, showModal, router, pathname]);
+
   const { mutateAsync: refreshMutate } = useMutation({
     mutationKey: AUTH_KEYS.refresh,
     mutationFn: refreshAction,
@@ -64,11 +94,22 @@ export default function AuthInitalizer({ hasAccessToken }: Props) {
         login(res.data);
         scheduleRefresh(res.data.accessTokenExpiresAtMs, req);
       } else {
-        handleAuthFailure();
+        switch (res.error.code) {
+          case 'UA':
+          case 'IT':
+          case 'ET':
+            handleAuthFailure();
+            break;
+          case 'KE':
+            handleKeyError();
+            break;
+          default:
+            handleServerError();
+        }
       }
     },
     onError: () => {
-      handleAuthFailure();
+      handleServerError();
     },
   });
 

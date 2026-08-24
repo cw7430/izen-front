@@ -13,7 +13,7 @@ export default function InternalServerError() {
     showModal({
       modal: 'alert',
       title: '서버 에러',
-      text: '서버 에러가 발생하였습니다.',
+      text: '서버 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.',
       handleAfterClose: () => {
         router.replace('/');
       },

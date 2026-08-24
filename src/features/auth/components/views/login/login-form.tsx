@@ -68,6 +68,11 @@ export default function LoginForm() {
               message: '아이디 또는 비밀번호가 올바르지 않습니다.',
             });
             break;
+          case 'KE':
+            setError('root', {
+              message: 'API KEY가 잘못되었습니다. 관리자에게 문의하세요.',
+            });
+            break;
           default:
             setError('root', {
               message:
