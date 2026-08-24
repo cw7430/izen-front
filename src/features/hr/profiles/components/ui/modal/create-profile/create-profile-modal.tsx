@@ -21,6 +21,8 @@ import { useAuthStore } from '@/features/auth/stores';
 import {
   type DepartmentListResponseDto,
   type PositionListResponseDto,
+  type CreateProfileRequestDto,
+  createProfileRequestSchema,
 } from '@/features/hr/profiles/schemas';
 import { createProfile } from '@/features/hr/profiles/server/actions';
 import { PROFILE_KEYS } from '@/features/hr/profiles/constants';
@@ -54,6 +56,48 @@ export default function CreateProfileModal({
   const isPermitted = team ? allowedProfileTeams.includes(team) : false;
 
   const [departmentCode, setDepartmentCode] = useState<string>('');
+
+  const createProfileForm = useForm<CreateProfileRequestDto>({
+    mode: 'onChange',
+    resolver: zodResolver(createProfileRequestSchema),
+    defaultValues: {
+      employeeCode: '',
+      employeeName: '',
+      positionCode: '',
+      employeeRole: undefined,
+      teamCode: '',
+      phone: '',
+      email: '',
+    },
+  });
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    setError,
+    watch,
+    clearErrors,
+    formState: { errors },
+  } = createProfileForm;
+
+  const handleFormChange = () => {
+    if (errors.root) {
+      clearErrors('root');
+      clearErrors('employeeCode');
+      clearErrors('employeeName');
+      clearErrors('positionCode');
+      clearErrors('employeeRole');
+      clearErrors('teamCode');
+      clearErrors('phone');
+      clearErrors('email');
+    }
+  };
+
+  const availableTeams = useMemo(() => {
+    const dept = departments.find((d) => d.departmentCode === departmentCode);
+    return dept ? dept.teams : [];
+  }, [departments, departmentCode]);
 
   useEffect(() => {
     if (isOpen) {
