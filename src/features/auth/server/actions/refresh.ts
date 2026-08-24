@@ -15,7 +15,7 @@ export const refreshAction = async (req: RefreshRequestDto) =>
   clientResponse<LoginAndRefreshResponseDtoForClient>(async () => {
     const res = await apiPost<LoginAndRefreshResponseDtoForServer>(
       '/auth/refresh',
-      {},
+      { authType: 'refresh' },
       req,
     );
 
