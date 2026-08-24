@@ -6,7 +6,7 @@ import {
   type UpdateProfileRequestDto,
   type EmployeeCodeResponseDto,
   employeeCodeResponseSchema,
-} from '@/features/hr/profiles/schemas/profile';
+} from '@/features/hr/profiles/schemas';
 import { ServerRequest } from '@/common/api/server';
 import { ApiError } from '@/common/api/shared/error';
 import { ResponseCode } from '@/common/api/shared/constants';

@@ -1,8 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
+import { useMutation, useIsMutating } from '@tanstack/react-query';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useShallow } from 'zustand/shallow';
-import { Modal } from 'react-bootstrap';
+import {
+  Button,
+  Modal,
+  Form,
+  InputGroup,
+  Row,
+  Col,
+  Spinner,
+} from 'react-bootstrap';
 
 import { useModalState, useDialogModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
@@ -10,6 +22,9 @@ import {
   type DepartmentListResponseDto,
   type PositionListResponseDto,
 } from '@/features/hr/profiles/schemas';
+import { createProfile } from '@/features/hr/profiles/server/actions';
+import { PROFILE_KEYS } from '@/features/hr/profiles/constants';
+import CreateEmployeeCodeButton from './create-employee-code-button';
 
 interface Props {
   modalKey: string;
@@ -24,6 +39,11 @@ export default function CreateProfileModal({
   departments,
   positions,
 }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
+
   const { modals, closeModal } = useModalState(
     useShallow((s) => ({ modals: s.modals, closeModal: s.closeModal })),
   );
@@ -32,6 +52,8 @@ export default function CreateProfileModal({
 
   const isOpen = modals.includes(modalKey);
   const isPermitted = team ? allowedProfileTeams.includes(team) : false;
+
+  const [departmentCode, setDepartmentCode] = useState<string>('');
 
   useEffect(() => {
     if (isOpen) {

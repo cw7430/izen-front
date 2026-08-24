@@ -1,1 +1,1 @@
-export { HR_KEYS } from './query-keys';
+export { PROFILE_KEYS } from './query-keys';
