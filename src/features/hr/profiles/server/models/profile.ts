@@ -9,7 +9,7 @@ import {
   type ProfileListRequestDto,
   type ProfileDetailResponseDto,
   type ProfileListResponseDto,
-} from '@/features/hr/schemas';
+} from '@/features/hr/profiles/schemas';
 
 const { apiGet } = ServerRequest;
 

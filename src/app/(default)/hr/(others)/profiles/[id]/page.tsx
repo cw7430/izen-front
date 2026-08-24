@@ -1,6 +1,6 @@
 import { Container, Row, Col } from 'react-bootstrap';
 
-import { getProfile } from '@/features/hr/server/models/profiles';
+import { getProfile } from '@/features/hr/profiles/server/models';
 import { ApiError } from '@/common/api/shared/error';
 import {
   InternalServerError,
@@ -9,9 +9,9 @@ import {
   ValidationError,
 } from '@/common/components/layout/errors';
 import { ResponseCode } from '@/common/api/shared/constants';
-import { NavProfileListButton } from '@/features/hr/components/views/profiles/detail';
+import { NavProfileListButton } from '@/features/hr/profiles/components/views/detail';
 import { ShowModalButton } from '@/common/components/ui/button';
-import { UpdateProfileModal } from '@/features/hr/components/ui/modal';
+import { UpdateProfileModal } from '@/features/hr/profiles/components/ui/modal';
 
 interface Props {
   params: Promise<{ id: string }>;

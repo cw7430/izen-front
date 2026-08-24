@@ -6,7 +6,7 @@ import { Modal } from 'react-bootstrap';
 
 import { useModalState, useDialogModalState } from '@/common/stores';
 import { useAuthStore } from '@/features/auth/stores';
-import { type ProfileDetailResponseDto } from '@/features/hr/schemas';
+import { type ProfileDetailResponseDto } from '@/features/hr/profiles/schemas';
 
 interface Props {
   modalKey: string;

@@ -2,20 +2,37 @@
 
 import { clientResponse } from '@/common/api/shared/fetch';
 import {
-  employeeCodeResponseSchema,
+  type CreateProfileRequestDto,
+  type UpdateProfileRequestDto,
   type EmployeeCodeResponseDto,
-} from '@/features/hr/schemas/profile';
+  employeeCodeResponseSchema,
+} from '@/features/hr/profiles/schemas';
 import { ServerRequest } from '@/common/api/server';
 import { ApiError } from '@/common/api/shared/error';
 import { ResponseCode } from '@/common/api/shared/constants';
 
-const { apiPost } = ServerRequest;
+const { apiPost, apiPatch } = ServerRequest;
+
+const BASE_URL = '/hr/profiles';
+
+export const createProfile = async (req: CreateProfileRequestDto) =>
+  clientResponse<void>(async () =>
+    apiPost<void>(BASE_URL, { authType: 'access' }, req),
+  );
+
+export const updateProfile = async (req: UpdateProfileRequestDto) =>
+  clientResponse<void>(async () =>
+    apiPatch<void>(BASE_URL, { authType: 'access' }, req),
+  );
 
 export const getEmployeeCode = async () =>
   clientResponse<EmployeeCodeResponseDto>(async () => {
-    const res = await apiPost<EmployeeCodeResponseDto>('/hr/employee-code', {
-      authType: 'access',
-    });
+    const res = await apiPost<EmployeeCodeResponseDto>(
+      `${BASE_URL}/employee-code`,
+      {
+        authType: 'access',
+      },
+    );
 
     const validation = employeeCodeResponseSchema.safeParse(res);
 

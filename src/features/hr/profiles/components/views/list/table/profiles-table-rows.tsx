@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { type ProfileResponseDto } from '@/features/hr/schemas';
+import { type ProfileResponseDto } from '@/features/hr/profiles/schemas';
 
 interface Props {
   profile: ProfileResponseDto;

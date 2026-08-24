@@ -3,7 +3,7 @@ import { Col, Container, Row, Table } from 'react-bootstrap';
 import {
   type ProfileListRequestDto,
   type ProfileListResponseDto,
-} from '@/features/hr/schemas';
+} from '@/features/hr/profiles/schemas';
 import { CustomPagination } from '@/common/components/layout/page';
 import { SortChevron } from '@/common/components/ui/chevron';
 import ProfilesTableRows from './profiles-table-rows';
